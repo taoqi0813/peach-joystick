@@ -56,6 +56,16 @@ Vue.use(PeachJoystick)
   - 类型: Number | Type: Number
   - 默认值: 25 | Default: 25
 
++ appendToBody
+  - 组件是否插入至 body 元素上 | joystick append to body
+  - 类型: Boolean | Type: Boolean
+  - 默认值: false | Default: false
+
++ zIndex
+  - 摇杆z-index值 | joystick z-index
+  - 类型: Number | Type: Number
+  - 默认值: 100 | Default: 100
+
 ### 事件 | Events
 #### move()
 + 摇杆移动事件 | joystick move event: 
@@ -64,5 +74,6 @@ Vue.use(PeachJoystick)
 ## 更新日志 | Log
 |  版本号   | 更新时间  | 更新内容  |
 |  ----  | ----  | ----  |
+| 0.1.2  | 2020/7/20 | 增加appendToBody和zIndex设置 |
 | 0.1.1  | 2020/6/23 | 修改组件名称 |
 | 0.1.0  | 2020/6/23 | 初始化项目 |

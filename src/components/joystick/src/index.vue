@@ -4,7 +4,7 @@
     id="peach-joystick-container"
     class="peach-joystick-container"
     :class="{'peach-joystick-left-bottom': defaultOptions.position === 'left-bottom','peach-joystick-right-bottom': defaultOptions.position === 'right-bottom'}"
-    :style="{width: parseInt(defaultOptions.size) + defaultOptions.padding * 2 + 'px', height: parseInt(defaultOptions.size) + defaultOptions.padding * 2 + 'px'}"
+    :style="{width: parseInt(defaultOptions.size) + defaultOptions.padding * 2 + 'px', height: parseInt(defaultOptions.size) + defaultOptions.padding * 2 + 'px',zIndex: defaultOptions.zIndex}"
   >
     <canvas id="joystick-canvas" :width="defaultOptions.size" :height="defaultOptions.size" />
   </div>
@@ -58,7 +58,8 @@ export default {
         background: require("../../../assets/joystick_bg.png"),
         joystick: require("../../../assets/joystick_cmd.png"),
         position: "left-bottom",
-        padding: 25
+        padding: 25,
+        zIndex: 100
       }
     };
   },
@@ -70,6 +71,11 @@ export default {
     el.removeEventListener("touchmove", this.touch, false);
     el.removeEventListener("touchend", this.touch, false);
   },
+  destroyed() {
+    if (this.defaultOptions.appendToBody && this.$el && this.$el.parentNode) {
+      this.$el.parentNode.removeChild(this.$el);
+    }
+  },
   methods: {
     initJoystick() {
       this.defaultOptions = {
@@ -77,6 +83,9 @@ export default {
         ...this.options
       };
       this.$nextTick(() => {
+        if (this.defaultOptions.appendToBody) {
+          document.body.appendChild(this.$el);
+        }
         joystick_cmd = new Image(); // 内摇杆图片
         joystick_bg = new Image(); // 外摇杆图片
         canvas = document.getElementById("joystick-canvas"); // 画板
@@ -275,7 +284,10 @@ export default {
               if (
                 Math.sqrt(
                   Math.pow(
-                    e.touches[0].clientX - joystick_left - offset_left - centerX,
+                    e.touches[0].clientX -
+                      joystick_left -
+                      offset_left -
+                      centerX,
                     2
                   ) +
                     Math.pow(
@@ -288,7 +300,8 @@ export default {
                 ) <=
                 rb_size / 2 - rc_size / 2
               ) {
-                jx = e.touches[0].clientX - joystick_left - offset_left - centerX;
+                jx =
+                  e.touches[0].clientX - joystick_left - offset_left - centerX;
                 jy =
                   e.touches[0].clientY - offset_height - offset_top - centerY;
               } else {
